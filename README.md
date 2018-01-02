@@ -52,9 +52,10 @@ or
     ],
 ```
 
-POST请求 `http://www.app.com/sms/verify-code` 
+POST请求 `http://your.domain/sms/verify-code` 
 
 参数：mobile
+
 备注：为了支持开发时的调试，在发送验证码时不去验证手机号本身的有效性，请在发送验证码前自行验证。
 
 返回参数：
@@ -111,13 +112,13 @@ POST请求 `http://www.app.com/sms/verify-code`
 
 非模板类通道，可以通过 config/ibrand/sms.php 自定义短信内容
 
-`'content' => '【your app signature】亲爱的用户，您的验证码是%s。有效期为%s分钟，请尽快验证。'`
+`'content' => '【your signature】亲爱的用户，您的验证码是%s。有效期为%s分钟，请尽快验证。'`
 
 #### debug 
 
 在实际开发中会存在并不用真实发出验证码的情况，因此在 debug 模式下，可以通过
 
-`http://www.app.com/api/sms/info?mobile=1898888XXXX` 来直接只看某个手机号当前有效验证码信息。
+`http://your.domain/api/sms/info?mobile=1898888XXXX` 来直接只看某个手机号当前有效验证码信息。
 
 
   [1]: https://segmentfault.com/a/1190000011404105
