@@ -10,7 +10,7 @@ return [
 
 
     'route' => [
-        'prefix' => 'laravel-sms',
+        'prefix' => 'sms',
         'middleware' => ['web'],
     ],
 
