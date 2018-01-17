@@ -64,7 +64,7 @@ POST请求 `http://your.domain/sms/verify-code`
 
 ```
 {
-    "status": "true",
+    "status": true,
     "message": "短信发送成功"
 }
 ```
@@ -123,4 +123,4 @@ POST请求 `http://your.domain/sms/verify-code`
 `http://your.domain/api/sms/info?mobile=1898888XXXX` 来直接只看某个手机号当前有效验证码信息。
 
 
-  [1]: https://segmentfault.com/a/1190000011404105
+  [1]: https://github.com/overtrue/easy-sms/
