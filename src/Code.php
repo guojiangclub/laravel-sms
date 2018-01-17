@@ -1,19 +1,32 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2017-12-28
- * Time: 0:41
+
+/*
+ * This file is part of ibrand/laravel-sms.
+ *
+ * (c) iBrand <https://www.ibrand.cc>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-namespace Ibrand\Sms;
-
+namespace iBrand\Sms;
 
 use Illuminate\Support\Collection;
 
+/**
+ * Class Code
+ * @package iBrand\Sms
+ */
 class Code extends Collection
 {
-
+    /**
+     * Code constructor.
+     * @param $to
+     * @param $code
+     * @param $sent
+     * @param $attempts
+     * @param $expireAt
+     */
     public function __construct($to, $code, $sent, $attempts, $expireAt)
     {
         $items = compact('to', 'code', 'sent', 'attempts', 'expireAt');
@@ -23,7 +36,7 @@ class Code extends Collection
     /**
      * Magic accessor.
      *
-     * @param string $property Property name.
+     * @param string $property property name
      *
      * @return mixed
      */
@@ -32,7 +45,5 @@ class Code extends Collection
         if ($this->has($property)) {
             return $this->get($property);
         }
-
-        return;
     }
 }

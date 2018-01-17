@@ -1,21 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2017-12-27
- * Time: 18:42
+
+/*
+ * This file is part of ibrand/laravel-sms.
+ *
+ * (c) iBrand <https://www.ibrand.cc>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 return [
-
-
     'route' => [
         'prefix' => 'sms',
         'middleware' => ['web'],
     ],
 
     'easy_sms' => [
-
         'timeout' => 5.0,
 
         // 默认发送配置
@@ -31,7 +31,6 @@ return [
 
         // 可用的网关配置
         'gateways' => [
-
             'errorlog' => [
                 'file' => '/tmp/easy-sms.log',
             ],
@@ -44,7 +43,7 @@ return [
                 'access_key_id' => 'dalvT9gtAPdhHyk1',
                 'access_key_secret' => 'xA7sKufp6WuwlQ5zcEfK7XV2TlC7jm',
                 'sign_name' => '阿里云短信测试专用',
-                'code_template_id' => 'SMS_80215252'
+                'code_template_id' => 'SMS_80215252',
             ],
 
             'alidayu' => [
@@ -56,8 +55,8 @@ return [
     'code' => [
         'length' => 5,
         'validMinutes' => 5,
-        'maxAttempts' => 0
+        'maxAttempts' => 0,
     ],
 
-    'content' => '【your app signature】亲爱的用户，您的验证码是%s。有效期为%s分钟，请尽快验证。'
+    'content' => '【your app signature】亲爱的用户，您的验证码是%s。有效期为%s分钟，请尽快验证。',
 ];

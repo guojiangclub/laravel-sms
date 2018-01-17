@@ -1,11 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2017-12-27
- * Time: 23:03
- */
 
+/*
+ * This file is part of ibrand/laravel-sms.
+ *
+ * (c) iBrand <https://www.ibrand.cc>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 Route::post('verify-code', 'SmsController@postSendCode');
 

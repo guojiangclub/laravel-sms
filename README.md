@@ -24,13 +24,13 @@ composer require ibrand/laravel-sms:~1.0 -vvv
 
 `config/app.php` 文件中 'providers' 添加
 ```
-Ibrand\Sms\ServiceProvder::class
+iBrand\Sms\ServiceProvder::class
 ```
 
 `config/app.php` 文件中 'aliases' 添加
 
 ```
-'Sms'=> Ibrand\Sms\Facade::class
+'Sms'=> iBrand\Sms\Facade::class
 ```
 
 ### 使用
@@ -70,7 +70,7 @@ POST请求 `http://your.domain/sms/verify-code`
 #### 验证验证码
 
 ```
-    use Ibrand\Sms\Facade as Sms;
+    use iBrand\Sms\Facade as Sms;
     
 
     if (!Sms::checkCode(\request('mobile'), \request('code'))) {

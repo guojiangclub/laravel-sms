@@ -19,16 +19,16 @@
   },
   "autoload": {
     "psr-4": {
-      "Ibrand\\Sms\\": "src/"
+      "iBrand\\Sms\\": "src/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Ibrand\\Sms\\ServiceProvider"
+        "iBrand\\Sms\\ServiceProvider"
       ],
       "aliases": {
-        "Sms": "Ibrand\\Sms\\Facade"
+        "Sms": "iBrand\\Sms\\Facade"
       }
     }
   }

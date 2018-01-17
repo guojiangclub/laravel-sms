@@ -1,18 +1,28 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2017-12-27
- * Time: 23:04
+
+/*
+ * This file is part of ibrand/laravel-sms.
+ *
+ * (c) iBrand <https://www.ibrand.cc>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-namespace Ibrand\Sms;
+namespace iBrand\Sms;
 
 use Illuminate\Routing\Controller;
-use Ibrand\Sms\Facade as Sms;
+use iBrand\Sms\Facade as Sms;
 
+/**
+ * Class SmsController
+ * @package iBrand\Sms
+ */
 class SmsController extends Controller
 {
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function postSendCode()
     {
         $mobile = request('mobile');
@@ -29,6 +39,9 @@ class SmsController extends Controller
         return response()->json(['success' => 'true', 'message' => '短信发送成功']);
     }
 
+    /**
+     *
+     */
     public function info()
     {
         $html = '<meta charset="UTF-8"/><h2 align="center" style="margin-top: 30px;margin-bottom: 0;">iBrand Laravel Sms</h2>';
