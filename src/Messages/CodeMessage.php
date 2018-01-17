@@ -15,8 +15,7 @@ use Overtrue\EasySms\Contracts\GatewayInterface;
 use Overtrue\EasySms\Message;
 
 /**
- * Class CodeMessage
- * @package iBrand\Sms\Messages
+ * Class CodeMessage.
  */
 class CodeMessage extends Message
 {
@@ -31,6 +30,7 @@ class CodeMessage extends Message
 
     /**
      * CodeMessage constructor.
+     *
      * @param $code
      * @param $minutes
      */
@@ -40,10 +40,11 @@ class CodeMessage extends Message
         $this->minutes = $minutes;
     }
 
-    // 定义直接使用内容发送平台的内容
-
     /**
+     * 定义直接使用内容发送平台的内容.
+     *
      * @param GatewayInterface|null $gateway
+     *
      * @return string
      */
     public function getContent(GatewayInterface $gateway = null)
@@ -53,10 +54,11 @@ class CodeMessage extends Message
         return vsprintf($content, [$this->content, $this->minutes]);
     }
 
-    // 定义使用模板发送方式平台所需要的模板 ID
-
     /**
+     * 定义使用模板发送方式平台所需要的模板 ID.
+     *
      * @param GatewayInterface|null $gateway
+     *
      * @return mixed
      */
     public function getTemplate(GatewayInterface $gateway = null)
@@ -76,6 +78,7 @@ class CodeMessage extends Message
 
     /**
      * @param GatewayInterface|null $gateway
+     *
      * @return array
      */
     public function getData(GatewayInterface $gateway = null)

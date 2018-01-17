@@ -12,8 +12,7 @@
 namespace iBrand\Sms;
 
 /**
- * Class Facade
- * @package iBrand\Sms
+ * Class Facade.
  */
 class Facade extends \Illuminate\Support\Facades\Facade
 {

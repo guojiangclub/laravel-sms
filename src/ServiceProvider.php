@@ -11,24 +11,22 @@
 
 namespace iBrand\Sms;
 
+use iBrand\Sms\Storage\CacheStorage;
 use Illuminate\Support\Facades\Route;
 use Overtrue\EasySms\EasySms;
 
 /**
- * Class ServiceProvider
- * @package iBrand\Sms
+ * Class ServiceProvider.
  */
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    //protected $defer = true;
-
     /**
      * @var string
      */
     protected $namespace = 'iBrand\Sms';
 
     /**
-     * Boot the service provider
+     * Boot the service provider.
      */
     public function boot()
     {
@@ -57,9 +55,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         );
 
         $this->app->singleton(Sms::class, function ($app) {
-            return new Sms(new EasySms(config('ibrand.sms.easy_sms')));
+            $storage = config('ibrand.sms.storage', CacheStorage::class);
+
+            return new Sms(new EasySms(config('ibrand.sms.easy_sms')), new $storage());
         });
-        //dd('111');
     }
 
     /**

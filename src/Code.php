@@ -14,13 +14,13 @@ namespace iBrand\Sms;
 use Illuminate\Support\Collection;
 
 /**
- * Class Code
- * @package iBrand\Sms
+ * Class Code.
  */
 class Code extends Collection
 {
     /**
      * Code constructor.
+     *
      * @param $to
      * @param $code
      * @param $sent

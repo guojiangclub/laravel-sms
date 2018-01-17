@@ -12,8 +12,7 @@
 namespace iBrand\Sms\Storage;
 
 /**
- * Class SessionStorage
- * @package iBrand\Sms\Storage
+ * Class SessionStorage.
  */
 class SessionStorage implements StorageInterface
 {
@@ -31,6 +30,7 @@ class SessionStorage implements StorageInterface
     /**
      * @param $key
      * @param $default
+     *
      * @return mixed
      */
     public function get($key, $default)

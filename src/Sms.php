@@ -19,8 +19,7 @@ use Overtrue\EasySms\EasySms;
 use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
 
 /**
- * Class Sms
- * @package iBrand\Sms
+ * Class Sms.
  */
 class Sms
 {
@@ -34,12 +33,28 @@ class Sms
     protected $storage;
 
     /**
+     * @var
+     */
+    protected $key;
+
+    /**
+     * @param mixed $key
+     */
+    public function setKey($key)
+    {
+        $key = 'ibrand.sms.' . $key;
+        $this->key = md5($key);
+    }
+
+    /**
      * Sms constructor.
+     *
      * @param EasySms $easySms
      */
-    public function __construct(EasySms $easySms)
+    public function __construct(EasySms $easySms, StorageInterface $storage)
     {
         $this->easySms = $easySms;
+        $this->storage = $storage;
     }
 
     /**
@@ -57,14 +72,16 @@ class Sms
      */
     public function send($to)
     {
+        $this->setKey($to);
+
         //1. get code from storage.
-        $code = $this->getCodeFromStorage($to);
+        $code = $this->getCodeFromStorage();
 
         if ($this->needNewCode($code)) {
             $code = $this->getNewCode($to);
         }
 
-        $validMinutes = (int) config('ibrand.sms.code.validMinutes', 5);
+        $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
 
         $message = new CodeMessage($code->code, $validMinutes);
 
@@ -75,7 +92,7 @@ class Sms
                 if ('success' == $value['status']) {
                     $code->put('sent', true);
                     $code->put('sentAt', Carbon::now());
-                    $this->getStorage()->set('ibrand.sms.'.$to, $code);
+                    $this->storage->set($this->key, $code);
 
                     return true;
                 }
@@ -92,9 +109,9 @@ class Sms
      *
      * @return mixed
      */
-    public function getCodeFromStorage($to)
+    public function getCodeFromStorage()
     {
-        return $this->getStorage()->get('ibrand.sms.'.$to, '');
+        return $this->storage->get($this->key, '');
     }
 
     /**
@@ -126,7 +143,7 @@ class Sms
     {
         $code = $this->generateCode($to);
 
-        $this->getStorage()->set('ibrand.sms.'.$to, $code);
+        $this->storage->set($this->key, $code);
 
         return $code;
     }
@@ -138,7 +155,9 @@ class Sms
      */
     public function canSend($to)
     {
-        $code = $this->getStorage()->get('ibrand.sms.'.$to, '');
+        $this->setKey($to);
+
+        $code = $this->storage->get($this->key, '');
 
         if (empty($code) or $code->sentAt < Carbon::now()->addMinutes(-1)) {
             return true;
@@ -154,7 +173,7 @@ class Sms
      */
     public function generateCode($to)
     {
-        $length = (int) config('ibrand.sms.code.length', 5);
+        $length = (int)config('ibrand.sms.code.length', 5);
         $characters = '0123456789';
         $charLength = strlen($characters);
         $randomString = '';
@@ -162,13 +181,13 @@ class Sms
             $randomString .= $characters[mt_rand(0, $charLength - 1)];
         }
 
-        $validMinutes = (int) config('ibrand.sms.code.validMinutes', 5);
+        $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
 
         return new Code($to, $randomString, false, 0, Carbon::now()->addMinutes($validMinutes));
     }
 
     /**
-     * @return CacheStorage
+     * @return CacheStorage|StorageInterface
      */
     public function getStorage()
     {
@@ -183,17 +202,19 @@ class Sms
      */
     public function checkCode($to, $inputCode)
     {
-        $code = $this->getStorage()->get('ibrand.sms.'.$to, '');
+        $this->setKey($to);
+
+        $code = $this->storage->get($this->key, '');
 
         if ($code and $code->code == $inputCode) {
-            $this->getStorage()->forget('ibrand.sms.'.$to);
+            $this->storage->forget($this->key);
 
             return true;
         }
 
         $code->put('attempts', $code->attempts + 1);
 
-        $this->getStorage()->set('ibrand.sms.'.$to, $code);
+        $this->storage->set($this->key, $code);
 
         return false;
     }

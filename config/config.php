@@ -59,4 +59,6 @@ return [
     ],
 
     'content' => '【your app signature】亲爱的用户，您的验证码是%s。有效期为%s分钟，请尽快验证。',
+
+    'storage' => \iBrand\Sms\Storage\CacheStorage::class,
 ];
