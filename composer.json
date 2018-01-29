@@ -17,6 +17,12 @@
     "php": ">=5.6",
     "overtrue/easy-sms": "~1.0"
   },
+  "require-dev": {
+    "mockery/mockery": "~0.9",
+    "phpunit/phpunit": "~5.0",
+    "orchestra/testbench": "~3.4",
+    "orchestra/database": "^3.4"
+  },
   "autoload": {
     "psr-4": {
       "iBrand\\Sms\\": "src/"

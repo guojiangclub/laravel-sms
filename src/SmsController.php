@@ -41,7 +41,7 @@ class SmsController extends Controller
 
 
     /**
-     *
+     * laravel sms code info.
      */
     public function info()
     {
