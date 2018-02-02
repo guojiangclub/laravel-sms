@@ -39,7 +39,6 @@ class SmsController extends Controller
         return response()->json(['success' => true, 'message' => '短信发送成功']);
     }
 
-
     /**
      * laravel sms code info.
      */

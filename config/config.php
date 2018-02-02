@@ -25,14 +25,14 @@ return [
 
             // 默认可用的发送网关
             'gateways' => [
-                'aliyun',
+                'errorlog',
             ],
         ],
 
         // 可用的网关配置
         'gateways' => [
             'errorlog' => [
-                'file' => '/tmp/easy-sms.log',
+                'file' => storage_path('logs/laravel-sms.log'),
             ],
 
             'yunpian' => [
@@ -40,10 +40,10 @@ return [
             ],
 
             'aliyun' => [
-                'access_key_id' => 'dalvT9gtAPdhHyk1',
-                'access_key_secret' => 'xA7sKufp6WuwlQ5zcEfK7XV2TlC7jm',
+                'access_key_id' => 'xxxx',
+                'access_key_secret' => 'xxxx',
                 'sign_name' => '阿里云短信测试专用',
-                'code_template_id' => 'SMS_80215252',
+                'code_template_id' => 'SMS_802xxx',
             ],
 
             'alidayu' => [

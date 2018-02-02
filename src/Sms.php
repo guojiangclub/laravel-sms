@@ -47,6 +47,14 @@ class Sms
     }
 
     /**
+     * @return mixed
+     */
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    /**
      * Sms constructor.
      *
      * @param EasySms $easySms
@@ -119,7 +127,7 @@ class Sms
      *
      * @return bool
      */
-    public function needNewCode($code)
+    protected function needNewCode($code)
     {
         if (empty($code)) {
             return true;
@@ -139,7 +147,7 @@ class Sms
      *
      * @return Code
      */
-    public function getNewCode($to)
+    protected function getNewCode($to)
     {
         $code = $this->generateCode($to);
 
@@ -171,7 +179,7 @@ class Sms
      *
      * @return Code
      */
-    public function generateCode($to)
+    protected function generateCode($to)
     {
         $length = (int) config('ibrand.sms.code.length', 5);
         $characters = '0123456789';
