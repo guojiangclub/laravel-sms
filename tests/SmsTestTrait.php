@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of ibrand/laravel-sms.
+ *
+ * (c) iBrand <https://www.ibrand.cc>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace iBrand\Sms\Test;
 
 use iBrand\Sms\Storage\CacheStorage;
@@ -7,14 +16,13 @@ use Sms;
 
 trait SmsTestTrait
 {
-
     public function testStorage()
     {
         Sms::setStorage(new CacheStorage());
 
         $storage = Sms::getStorage();
 
-        $this->assertEquals(CacheStorage::class, get_class($storage));
+        $this->assertSame(CacheStorage::class, get_class($storage));
     }
 
     /**
@@ -24,7 +32,7 @@ trait SmsTestTrait
     {
         $key = md5('ibrand.sms.18988888888');
         Sms::setKey('18988888888');
-        $this->assertEquals($key, Sms::getKey());
+        $this->assertSame($key, Sms::getKey());
     }
 
     /**
@@ -32,7 +40,6 @@ trait SmsTestTrait
      */
     public function testSend()
     {
-
         //1. test send.
         $result = Sms::send('18988888888');
         $this->assertTrue($result);

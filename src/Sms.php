@@ -80,20 +80,22 @@ class Sms
      */
     public function send($to)
     {
-        $this->setKey($to);
-
-        //1. get code from storage.
-        $code = $this->getCodeFromStorage();
-
-        if ($this->needNewCode($code)) {
-            $code = $this->getNewCode($to);
-        }
-
-        $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
-
-        $message = new CodeMessage($code->code, $validMinutes);
-
         try {
+
+            $this->setKey($to);
+
+            //1. get code from storage.
+            $code = $this->getCodeFromStorage();
+
+            if ($this->needNewCode($code)) {
+                $code = $this->getNewCode($to);
+            }
+
+            $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
+
+            $message = new CodeMessage($code->code, $validMinutes);
+
+
             $results = $this->easySms->send($to, $message);
 
             foreach ($results as $key => $value) {
@@ -105,11 +107,25 @@ class Sms
                     return true;
                 }
             }
-        } catch (NoGatewayAvailableException $e) {
+
+        } catch (NoGatewayAvailableException $noGatewayAvailableException) {
+            return false;
+        } catch (\Exception $exception) {
             return false;
         }
 
         return false;
+    }
+
+
+    /**
+     * check china mobile.
+     * @param $to
+     * @return false|int
+     */
+    public function verifyMobile($to)
+    {
+        return preg_match('/^(?=\d{11}$)^1(?:3\d|4[57]|5[^4\D]|66|7[^249\D]|8\d|9[89])\d{8}$/', $to);
     }
 
     /**
