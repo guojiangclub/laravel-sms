@@ -1,39 +1,20 @@
 <?php
 
-/*
- * This file is part of ibrand/laravel-sms.
- *
- * (c) iBrand <https://www.ibrand.cc>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace iBrand\Sms\Test;
 
-/**
- * Class SmsTest.
- */
-class SmsTest extends Orchestra\Testbench\TestCase
+use iBrand\Sms\Storage\CacheStorage;
+use Sms;
+
+trait SmsTestTrait
 {
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     *
-     * @return array
-     */
-    protected function getPackageProviders($app)
-    {
-        return ['iBrand\Sms\ServiceProvider'];
-    }
 
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     *
-     * @return array
-     */
-    protected function getPackageAliases($app)
+    public function testStorage()
     {
-        return [
-            'Sms' => "iBrand\Sms\Facade",
-        ];
+        Sms::setStorage(new CacheStorage());
+
+        $storage = Sms::getStorage();
+
+        $this->assertEquals(CacheStorage::class, get_class($storage));
     }
 
     /**
@@ -43,7 +24,7 @@ class SmsTest extends Orchestra\Testbench\TestCase
     {
         $key = md5('ibrand.sms.18988888888');
         Sms::setKey('18988888888');
-        $this->assertSame($key, Sms::getKey());
+        $this->assertEquals($key, Sms::getKey());
     }
 
     /**
@@ -51,8 +32,13 @@ class SmsTest extends Orchestra\Testbench\TestCase
      */
     public function testSend()
     {
-        $result = Sms::send('18988888888');
 
+        //1. test send.
+        $result = Sms::send('18988888888');
+        $this->assertTrue($result);
+
+        //2. test need create new code.
+        $result = Sms::send('18988888888');
         $this->assertTrue($result);
     }
 

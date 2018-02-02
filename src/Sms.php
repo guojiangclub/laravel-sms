@@ -42,7 +42,7 @@ class Sms
      */
     public function setKey($key)
     {
-        $key = 'ibrand.sms.'.$key;
+        $key = 'ibrand.sms.' . $key;
         $this->key = md5($key);
     }
 
@@ -89,7 +89,7 @@ class Sms
             $code = $this->getNewCode($to);
         }
 
-        $validMinutes = (int) config('ibrand.sms.code.validMinutes', 5);
+        $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
 
         $message = new CodeMessage($code->code, $validMinutes);
 
@@ -133,6 +133,16 @@ class Sms
             return true;
         }
 
+        return $this->checkAttempts($code);
+    }
+
+    /**
+     * Check attempt times.
+     * @param $code
+     * @return bool
+     */
+    private function checkAttempts($code)
+    {
         $maxAttempts = config('ibrand.sms.code.maxAttempts');
 
         if ($code->expireAt > Carbon::now() and $code->attempts <= $maxAttempts) {
@@ -181,7 +191,7 @@ class Sms
      */
     protected function generateCode($to)
     {
-        $length = (int) config('ibrand.sms.code.length', 5);
+        $length = (int)config('ibrand.sms.code.length', 5);
         $characters = '0123456789';
         $charLength = strlen($characters);
         $randomString = '';
@@ -189,7 +199,7 @@ class Sms
             $randomString .= $characters[mt_rand(0, $charLength - 1)];
         }
 
-        $validMinutes = (int) config('ibrand.sms.code.validMinutes', 5);
+        $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
 
         return new Code($to, $randomString, false, 0, Carbon::now()->addMinutes($validMinutes));
     }
