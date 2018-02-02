@@ -145,7 +145,7 @@ class Sms
     {
         $maxAttempts = config('ibrand.sms.code.maxAttempts');
 
-        if ($code->expireAt > Carbon::now() and $code->attempts <= $maxAttempts) {
+        if ($code->expireAt > Carbon::now() && $code->attempts <= $maxAttempts) {
             return false;
         }
 
@@ -177,7 +177,7 @@ class Sms
 
         $code = $this->storage->get($this->key, '');
 
-        if (empty($code) or $code->sentAt < Carbon::now()->addMinutes(-1)) {
+        if (empty($code) || $code->sentAt < Carbon::now()->addMinutes(-1)) {
             return true;
         }
 
@@ -224,7 +224,7 @@ class Sms
 
         $code = $this->storage->get($this->key, '');
 
-        if ($code and $code->code == $inputCode) {
+        if ($code && $code->code == $inputCode) {
             $this->storage->forget($this->key);
 
             return true;
