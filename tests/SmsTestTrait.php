@@ -11,7 +11,10 @@
 
 namespace iBrand\Sms\Test;
 
+use DB;
+use iBrand\Sms\Sms as SmsClass;
 use iBrand\Sms\Storage\CacheStorage;
+use Overtrue\EasySms\EasySms;
 use Sms;
 
 trait SmsTestTrait
@@ -22,7 +25,7 @@ trait SmsTestTrait
 
         $storage = Sms::getStorage();
 
-        $this->assertSame(CacheStorage::class, get_class($storage));
+        $this->assertEquals(CacheStorage::class, get_class($storage));
     }
 
     /**
@@ -32,7 +35,7 @@ trait SmsTestTrait
     {
         $key = md5('ibrand.sms.18988888888');
         Sms::setKey('18988888888');
-        $this->assertSame($key, Sms::getKey());
+        $this->assertEquals($key, Sms::getKey());
     }
 
     /**
@@ -45,6 +48,11 @@ trait SmsTestTrait
         $this->assertTrue($result);
 
         //2. test need create new code.
+        $result = Sms::send('18988888888');
+        $this->assertTrue($result);
+
+        //3. test use old code.
+        $this->app['config']->set('ibrand.sms.code.maxAttempts', 1);
         $result = Sms::send('18988888888');
         $this->assertTrue($result);
     }
@@ -84,4 +92,33 @@ trait SmsTestTrait
 
         $this->assertFalse($result);
     }
+
+    public function testBadGateway()
+    {
+        //1. test does not exist gateway.
+        $storage = config('ibrand.sms.storage', CacheStorage::class);
+
+        $this->app['config']->set('ibrand.sms.easy_sms.default.gateways', ['bad_gateway']);
+
+        $sms = new SmsClass(new EasySms(config('ibrand.sms.easy_sms')), new $storage());
+
+        $result = $sms->send('18988888888');
+        $this->assertFalse($result);
+    }
+
+    public function testSendUseDbLog()
+    {
+        $this->app['config']->set('ibrand.sms.dblog', true);
+
+        $result = Sms::send('18988888888');
+        $this->assertTrue($result);
+
+        //check database
+        $result = DB::table('laravel_sms_log')->where('mobile', '18988888888')->first();
+        $this->assertNotNull($result);
+        $this->assertEquals('18988888888', $result->mobile);
+        $this->assertEquals(1, $result->is_sent);
+    }
+
+
 }

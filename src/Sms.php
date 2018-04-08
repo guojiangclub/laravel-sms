@@ -12,6 +12,7 @@
 namespace iBrand\Sms;
 
 use Carbon\Carbon;
+use iBrand\Sms\Jobs\DbLogger;
 use iBrand\Sms\Messages\CodeMessage;
 use iBrand\Sms\Storage\CacheStorage;
 use iBrand\Sms\Storage\StorageInterface;
@@ -42,7 +43,7 @@ class Sms
      */
     public function setKey($key)
     {
-        $key = 'ibrand.sms.' . $key;
+        $key = 'ibrand.sms.'.$key;
         $this->key = md5($key);
     }
 
@@ -81,6 +82,7 @@ class Sms
     public function send($to)
     {
         try {
+            $flag = false;
 
             $this->setKey($to);
 
@@ -91,10 +93,9 @@ class Sms
                 $code = $this->getNewCode($to);
             }
 
-            $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
+            $validMinutes = (int) config('ibrand.sms.code.validMinutes', 5);
 
             $message = new CodeMessage($code->code, $validMinutes);
-
 
             $results = $this->easySms->send($to, $message);
 
@@ -103,24 +104,27 @@ class Sms
                     $code->put('sent', true);
                     $code->put('sentAt', Carbon::now());
                     $this->storage->set($this->key, $code);
-
-                    return true;
+                    $flag = true;
                 }
             }
-
         } catch (NoGatewayAvailableException $noGatewayAvailableException) {
-            return false;
+            $results = $noGatewayAvailableException->results;
+            $flag = false;
         } catch (\Exception $exception) {
-            return false;
+            $results = $exception->getMessage();
+            $flag = false;
         }
 
-        return false;
-    }
+        DbLogger::dispatch($code, $results, $flag);
 
+        return $flag;
+    }
 
     /**
      * check china mobile.
+     *
      * @param $to
+     *
      * @return false|int
      */
     public function verifyMobile($to)
@@ -154,14 +158,16 @@ class Sms
 
     /**
      * Check attempt times.
+     *
      * @param $code
+     *
      * @return bool
      */
     private function checkAttempts($code)
     {
         $maxAttempts = config('ibrand.sms.code.maxAttempts');
 
-        if ($code->expireAt > Carbon::now() && $code->attempts <= $maxAttempts) {
+        if ($code->expireAt > Carbon::now() && $code->attempts < $maxAttempts) {
             return false;
         }
 
@@ -207,7 +213,7 @@ class Sms
      */
     protected function generateCode($to)
     {
-        $length = (int)config('ibrand.sms.code.length', 5);
+        $length = (int) config('ibrand.sms.code.length', 5);
         $characters = '0123456789';
         $charLength = strlen($characters);
         $randomString = '';
@@ -215,7 +221,7 @@ class Sms
             $randomString .= $characters[mt_rand(0, $charLength - 1)];
         }
 
-        $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
+        $validMinutes = (int) config('ibrand.sms.code.validMinutes', 5);
 
         return new Code($to, $randomString, false, 0, Carbon::now()->addMinutes($validMinutes));
     }

@@ -11,32 +11,16 @@
 
 namespace iBrand\Sms\Test;
 
+use iBrand\Sms\Storage\CacheStorage;
+
 /**
  * Class SmsTest.
  */
-class CacheSmsTest extends \Orchestra\Testbench\TestCase
+class CacheSmsTest extends SmsTest
 {
-    use SmsTestTrait;
-
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     *
-     * @return array
-     */
-    protected function getPackageProviders($app)
+    protected function getEnvironmentSetUp($app)
     {
-        return ['iBrand\Sms\ServiceProvider'];
-    }
-
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     *
-     * @return array
-     */
-    protected function getPackageAliases($app)
-    {
-        return [
-            'Sms' => "iBrand\Sms\Facade",
-        ];
+        parent::getEnvironmentSetUp($app);
+        $app['config']->set('ibrand.sms.storage', CacheStorage::class);
     }
 }

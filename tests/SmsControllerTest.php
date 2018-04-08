@@ -66,4 +66,13 @@ class SmsControllerTest extends \Orchestra\Testbench\TestCase
         $response
             ->assertStatus(200);
     }
+
+    public function testDebug()
+    {
+        $this->app['config']->set('app.debug', true);
+
+        $response = $this->get('sms/info?mobile=18988885555');
+        $response
+            ->assertStatus(200);
+    }
 }

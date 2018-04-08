@@ -83,6 +83,8 @@ class CodeMessage extends Message
      */
     public function getData(GatewayInterface $gateway = null)
     {
-        return array_merge(['code' => $this->code],config('ibrand.sms.data'));
+        $data = array_filter(config('ibrand.sms.data'));
+
+        return array_merge($data, ['code' => $this->code]);
     }
 }

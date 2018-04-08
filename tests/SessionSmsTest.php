@@ -13,35 +13,11 @@ namespace iBrand\Sms\Test;
 
 use iBrand\Sms\Storage\SessionStorage;
 
-class SessionSmsTest extends \Orchestra\Testbench\TestCase
+class SessionSmsTest extends SmsTest
 {
-    use SmsTestTrait;
-
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     *
-     * @return array
-     */
-    protected function getPackageProviders($app)
-    {
-        return ['iBrand\Sms\ServiceProvider'];
-    }
-
-    /**
-     * @param \Illuminate\Foundation\Application $app
-     *
-     * @return array
-     */
-    protected function getPackageAliases($app)
-    {
-        return [
-            'Sms' => "iBrand\Sms\Facade",
-        ];
-    }
-
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('ibrand.sms', require __DIR__.'/../config/config.php');
+        parent::getEnvironmentSetUp($app);
         $app['config']->set('ibrand.sms.storage', SessionStorage::class);
     }
 }

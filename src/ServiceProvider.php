@@ -34,6 +34,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('ibrand/sms.php'),
             ]);
+
+            $this->loadMigrationsFrom(__DIR__.'/../migrations');
         }
 
         if (!$this->app->routesAreCached()) {
