@@ -21,10 +21,11 @@ Laravel 贴合实际需求同时满足多种通道的短信发送组件
 5. 支持短信验证码未验证时，用户再次请求验证码，在有效分钟内验证码保持一致。
 6. 集成短信发送路由，支持 web 和 api 发送方式。
 7. 支持验证码调试，debug 模式下可直接查询手机号目前有效的验证码
+8. 支持短信验证码发送记录保存到数据库
 
 ## TODO：
 
-1. 支持短信验证码发送记录
+1. 支持短信验证码发送记录 //DONE
 2. 支持语音验证码
 
 ## 安装
@@ -132,6 +133,16 @@ POST请求 `http://your.domain/sms/verify-code`
 在实际开发中会存在并不用真实发出验证码的情况，因此在 debug 模式下，可以通过
 
 `http://your.domain/api/sms/info?mobile=1898888XXXX` 来直接只看某个手机号当前有效验证码信息。
+
+### database log
+
+目前已经支持把发送记录保存到数据库，执行 `php artisan migrate` 生成  `laravel_sms_log` 表。
+
+同时在 `config/ibrand/sms.php` 把 `dblog` 设置为 `true`
+
+```
+'dblog' => true,
+```
 
 
 ### Resources
