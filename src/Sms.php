@@ -115,7 +115,7 @@ class Sms
             $flag = false;
         }
 
-        DbLogger::dispatch($code, $results, $flag);
+        DbLogger::dispatch($code, json_encode($results), $flag);
 
         return $flag;
     }

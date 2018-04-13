@@ -49,7 +49,7 @@ class DbLogger implements ShouldQueue
             'mobile' => $this->code->to,
             'data' => json_encode($this->code),
             'is_sent' => $this->flag,
-            'result' => json_encode($this->result),
+            'result' => $this->result,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
