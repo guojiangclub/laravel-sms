@@ -51,7 +51,7 @@ class CodeMessage extends Message
     {
         $content = config('ibrand.sms.content');
 
-        return vsprintf($content, [$this->content, $this->minutes]);
+        return vsprintf($content, [$this->code, $this->minutes]);
     }
 
     /**
