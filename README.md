@@ -38,7 +38,7 @@ composer require ibrand/laravel-sms:~1.0 -vvv
 
 `config/app.php` 文件中 'providers' 添加
 ```
-iBrand\Sms\ServiceProvder::class
+iBrand\Sms\ServiceProvider::class
 ```
 
 `config/app.php` 文件中 'aliases' 添加
