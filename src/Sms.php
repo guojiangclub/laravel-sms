@@ -24,246 +24,248 @@ use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
  */
 class Sms
 {
-    /**
-     * @var EasySms
-     */
-    protected $easySms;
-    /**
-     * @var
-     */
-    protected $storage;
+	/**
+	 * @var EasySms
+	 */
+	protected $easySms;
+	/**
+	 * @var
+	 */
+	protected $storage;
 
-    /**
-     * @var
-     */
-    protected $key;
+	/**
+	 * @var
+	 */
+	protected $key;
 
-    /**
-     * @param mixed $key
-     */
-    public function setKey($key)
-    {
-        $key = 'ibrand.sms.' . $key;
-        $this->key = md5($key);
-    }
+	/**
+	 * @param mixed $key
+	 */
+	public function setKey($key)
+	{
+		$key       = 'ibrand.sms.' . $key;
+		$this->key = md5($key);
+	}
 
-    /**
-     * @return mixed
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
+	/**
+	 * @return mixed
+	 */
+	public function getKey()
+	{
+		return $this->key;
+	}
 
-    /**
-     * Sms constructor.
-     *
-     * @param EasySms $easySms
-     */
-    public function __construct(EasySms $easySms, StorageInterface $storage)
-    {
-        $this->easySms = $easySms;
-        $this->storage = $storage;
-    }
+	/**
+	 * Sms constructor.
+	 *
+	 * @param EasySms $easySms
+	 */
+	public function __construct(EasySms $easySms, StorageInterface $storage)
+	{
+		$this->easySms = $easySms;
+		$this->storage = $storage;
+	}
 
-    /**
-     * @param StorageInterface $storage
-     */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-    }
+	/**
+	 * @param StorageInterface $storage
+	 */
+	public function setStorage(StorageInterface $storage)
+	{
+		$this->storage = $storage;
+	}
 
-    /**
-     * @param $to
-     *
-     * @return bool
-     */
-    public function send($to)
-    {
-        try {
-            $flag = false;
+	/**
+	 * @param       $to
+	 * @param array $data
+	 * @param array $gateways
+	 *
+	 * @return bool
+	 */
+	public function send($to, array $data = [], array $gateways = [])
+	{
+		try {
+			$flag = false;
 
-            $this->setKey($to);
+			$this->setKey($to);
 
-            //1. get code from storage.
-            $code = $this->getCodeFromStorage();
+			//1. get code from storage.
+			$code = $this->getCodeFromStorage();
 
-            if ($this->needNewCode($code)) {
-                $code = $this->getNewCode($to);
-            }
+			if ($this->needNewCode($code)) {
+				$code = $this->getNewCode($to);
+			}
 
-            $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
+			$validMinutes = (int) config('ibrand.sms.code.validMinutes', 5);
 
-            $message = new CodeMessage($code->code, $validMinutes);
+			$message = new CodeMessage($code->code, $validMinutes, $data);
 
-            $results = $this->easySms->send($to, $message);
+			$results = $this->easySms->send($to, $message, $gateways);
 
-            foreach ($results as $key => $value) {
-                if ('success' == $value['status']) {
-                    $code->put('sent', true);
-                    $code->put('sentAt', Carbon::now());
-                    $this->storage->set($this->key, $code);
-                    $flag = true;
-                }
-            }
-        } catch (NoGatewayAvailableException $noGatewayAvailableException) {
-            $results = $noGatewayAvailableException->results;
-            $flag = false;
-        } catch (\Exception $exception) {
-            $results = $exception->getMessage();
-            $flag = false;
-        }
+			foreach ($results as $key => $value) {
+				if ('success' == $value['status']) {
+					$code->put('sent', true);
+					$code->put('sentAt', Carbon::now());
+					$this->storage->set($this->key, $code);
+					$flag = true;
+				}
+			}
+		} catch (NoGatewayAvailableException $noGatewayAvailableException) {
+			$results = $noGatewayAvailableException->results;
+			$flag    = false;
+		} catch (\Exception $exception) {
+			$results = $exception->getMessage();
+			$flag    = false;
+		}
 
-        DbLogger::dispatch($code, json_encode($results), $flag);
+		DbLogger::dispatch($code, json_encode($results), $flag);
 
-        return $flag;
-    }
+		return $flag;
+	}
 
-    /**
-     * check china mobile.
-     *
-     * @param $to
-     *
-     * @return false|int
-     */
-    public function verifyMobile($to)
-    {
-        return preg_match('/^(?=\d{11}$)^1(?:3\d|4[57]|5[^4\D]|66|7[^249\D]|8\d|9[89])\d{8}$/', $to);
-    }
+	/**
+	 * check china mobile.
+	 *
+	 * @param $to
+	 *
+	 * @return false|int
+	 */
+	public function verifyMobile($to)
+	{
+		return preg_match('/^(?=\d{11}$)^1(?:3\d|4[57]|5[^4\D]|66|7[^249\D]|8\d|9[89])\d{8}$/', $to);
+	}
 
-    /**
-     * @param $to
-     *
-     * @return mixed
-     */
-    public function getCodeFromStorage()
-    {
-        return $this->storage->get($this->key, '');
-    }
+	/**
+	 * @param $to
+	 *
+	 * @return mixed
+	 */
+	public function getCodeFromStorage()
+	{
+		return $this->storage->get($this->key, '');
+	}
 
-    /**
-     * @param $code
-     *
-     * @return bool
-     */
-    protected function needNewCode($code)
-    {
-        if (empty($code)) {
-            return true;
-        }
+	/**
+	 * @param $code
+	 *
+	 * @return bool
+	 */
+	protected function needNewCode($code)
+	{
+		if (empty($code)) {
+			return true;
+		}
 
-        return $this->checkAttempts($code);
-    }
+		return $this->checkAttempts($code);
+	}
 
-    /**
-     * Check attempt times.
-     *
-     * @param $code
-     *
-     * @return bool
-     */
-    private function checkAttempts($code)
-    {
-        $maxAttempts = config('ibrand.sms.code.maxAttempts');
+	/**
+	 * Check attempt times.
+	 *
+	 * @param $code
+	 *
+	 * @return bool
+	 */
+	private function checkAttempts($code)
+	{
+		$maxAttempts = config('ibrand.sms.code.maxAttempts');
 
-        if ($code->expireAt > Carbon::now() && $code->attempts < $maxAttempts) {
-            return false;
-        }
+		if ($code->expireAt > Carbon::now() && $code->attempts < $maxAttempts) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * @param $to
-     *
-     * @return Code
-     */
-    protected function getNewCode($to)
-    {
-        $code = $this->generateCode($to);
+	/**
+	 * @param $to
+	 *
+	 * @return Code
+	 */
+	protected function getNewCode($to)
+	{
+		$code = $this->generateCode($to);
 
-        $this->storage->set($this->key, $code);
+		$this->storage->set($this->key, $code);
 
-        return $code;
-    }
+		return $code;
+	}
 
-    /**
-     * @param $to
-     *
-     * @return bool
-     */
-    public function canSend($to)
-    {
-        $this->setKey($to);
+	/**
+	 * @param $to
+	 *
+	 * @return bool
+	 */
+	public function canSend($to)
+	{
+		$this->setKey($to);
 
-        $code = $this->storage->get($this->key, '');
+		$code = $this->storage->get($this->key, '');
 
-        if (empty($code) || $code->sentAt < Carbon::now()->addMinutes(-1)) {
-            return true;
-        }
+		if (empty($code) || $code->sentAt < Carbon::now()->addMinutes(-1)) {
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     * @param $to
-     *
-     * @return Code
-     */
-    protected function generateCode($to)
-    {
-        $length = (int)config('ibrand.sms.code.length', 5);
-        $characters = '0123456789';
-        $charLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; ++$i) {
-            $randomString .= $characters[mt_rand(0, $charLength - 1)];
-        }
+	/**
+	 * @param $to
+	 *
+	 * @return Code
+	 */
+	public function generateCode($to)
+	{
+		$length       = (int) config('ibrand.sms.code.length', 5);
+		$characters   = '0123456789';
+		$charLength   = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < $length; ++$i) {
+			$randomString .= $characters[mt_rand(0, $charLength - 1)];
+		}
 
-        $validMinutes = (int)config('ibrand.sms.code.validMinutes', 5);
+		$validMinutes = (int) config('ibrand.sms.code.validMinutes', 5);
 
-        return new Code($to, $randomString, false, 0, Carbon::now()->addMinutes($validMinutes));
-    }
+		return new Code($to, $randomString, false, 0, Carbon::now()->addMinutes($validMinutes));
+	}
 
-    /**
-     * @return CacheStorage|StorageInterface
-     */
-    public function getStorage()
-    {
-        return $this->storage ? $this->storage : new CacheStorage();
-    }
+	/**
+	 * @return CacheStorage|StorageInterface
+	 */
+	public function getStorage()
+	{
+		return $this->storage ? $this->storage : new CacheStorage();
+	}
 
-    /**
-     * @param $to
-     * @param $inputCode
-     *
-     * @return bool
-     */
-    public function checkCode($to, $inputCode)
-    {
-        if (config('app.debug')) {
-            return true;
-        }
+	/**
+	 * @param $to
+	 * @param $inputCode
+	 *
+	 * @return bool
+	 */
+	public function checkCode($to, $inputCode)
+	{
+		if (config('app.debug')) {
+			return true;
+		}
 
-        $this->setKey($to);
+		$this->setKey($to);
 
-        $code = $this->storage->get($this->key, '');
+		$code = $this->storage->get($this->key, '');
 
-        if (empty($code)) {
-            return false;
-        }
+		if (empty($code)) {
+			return false;
+		}
 
-        if ($code && $code->code == $inputCode) {
-            $this->storage->forget($this->key);
+		if ($code && $code->code == $inputCode) {
+			$this->storage->forget($this->key);
 
-            return true;
-        }
+			return true;
+		}
 
-        $code->put('attempts', $code->attempts + 1);
+		$code->put('attempts', $code->attempts + 1);
 
-        $this->storage->set($this->key, $code);
+		$this->storage->set($this->key, $code);
 
-        return false;
-    }
+		return false;
+	}
 }

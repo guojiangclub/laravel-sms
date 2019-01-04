@@ -10,6 +10,8 @@ Laravel 贴合实际需求同时满足多种通道的短信发送组件
 [![Latest Unstable Version](https://poser.pugx.org/ibrand/laravel-sms/v/unstable)](https://packagist.org/packages/ibrand/laravel-sms)
 [![License](https://poser.pugx.org/ibrand/laravel-sms/license)](https://packagist.org/packages/ibrand/laravel-sms)
 
+[TOC]
+
 ## Featrue
 
 基于业务需求在 [overtrue/easy-sms][1] 基础进行扩展开发，主要实现如下目标：
@@ -79,6 +81,48 @@ POST请求 `http://your.domain/sms/verify-code`
     "message": "短信发送成功"
 }
 ```
+
+如果需要自定义路由，也可以通过使用Facade发送验证码：
+
+```php
+use iBrand\Sms\Facade as Sms;
+
+Sms::send(request('mobile'));
+```
+
+由于使用多网关发送，所以一条短信要支持多平台发送，每家的发送方式不一样，但是我们抽象定义了以下公用属性：
+
+- `content` 文字内容，使用在像云片类似的以文字内容发送的平台
+- `template` 模板 ID，使用在以模板ID来发送短信的平台
+- `data` 模板变量，使用在以模板ID来发送短信的平台
+
+```php
+use iBrand\Sms\Facade as Sms;
+
+Sms::send(request('mobile'), [
+    'content'  => '您的验证码为: 83115',
+    'template' => 'SMS_001',
+    'data' => [
+        'code' => 83115
+    ],
+]);
+```
+
+默认使用 `default` 中的设置来发送，如果某一条短信你想要覆盖默认的设置。在 `send` 方法中使用第三个参数即可：
+
+```php
+use iBrand\Sms\Facade as Sms;
+
+Sms::send((request('mobile'), [
+    'content'  => '您的验证码为: 83115',
+    'template' => 'SMS_001',
+    'data' => [
+        'code' => 83115
+    ],
+], ['aliyun']); // 这里的网关配置将会覆盖全局默认值
+```
+
+
 
 ### 验证验证码
 
