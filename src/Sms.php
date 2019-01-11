@@ -16,6 +16,7 @@ use iBrand\Sms\Jobs\DbLogger;
 use iBrand\Sms\Messages\CodeMessage;
 use iBrand\Sms\Storage\CacheStorage;
 use iBrand\Sms\Storage\StorageInterface;
+use Overtrue\EasySms\Contracts\MessageInterface;
 use Overtrue\EasySms\EasySms;
 use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
 
@@ -76,12 +77,12 @@ class Sms
 
 	/**
 	 * @param       $to
-	 * @param array $data
+	 * @param null  $data
 	 * @param array $gateways
 	 *
 	 * @return bool
 	 */
-	public function send($to, array $data = [], array $gateways = [])
+	public function send($to, $data = [], array $gateways = [])
 	{
 		try {
 			$flag = false;
@@ -97,7 +98,11 @@ class Sms
 
 			$validMinutes = (int) config('ibrand.sms.code.validMinutes', 5);
 
-			$message = new CodeMessage($code->code, $validMinutes, $data);
+			if (!($data instanceof MessageInterface)) {
+				$message = new CodeMessage($code->code, $validMinutes, $data);
+			} else {
+				$message = $data;
+			}
 
 			$results = $this->easySms->send($to, $message, $gateways);
 
@@ -181,7 +186,7 @@ class Sms
 	 *
 	 * @return Code
 	 */
-	protected function getNewCode($to)
+	public function getNewCode($to)
 	{
 		$code = $this->generateCode($to);
 

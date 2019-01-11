@@ -15,6 +15,9 @@ use DB;
 use iBrand\Sms\Sms as SmsClass;
 use iBrand\Sms\Storage\CacheStorage;
 use Overtrue\EasySms\EasySms;
+use Overtrue\EasySms\Gateways\YuntongxunGateway;
+use Overtrue\EasySms\PhoneNumber;
+use Overtrue\EasySms\Support\Config;
 use Sms;
 
 trait SmsTestTrait
@@ -140,6 +143,68 @@ trait SmsTestTrait
 
 		$gateways = ['errorlog'];
 		$result   = Sms::send('18988888888', $data, $gateways);
+		$this->assertTrue($result);
+	}
+
+	public function testYunTongXun()
+	{
+		$yuntongxun = [
+			'is_sub_account' => false,
+			'account_sid'    => 'mock-account-sid',
+			'account_token'  => 'mock-account-token',
+			'app_id'         => 'mock-app-id',
+		];
+		$gateways   = config('ibrand.sms.easy_sms.gateways');
+		$gateways   = array_merge($gateways, ['yuntongxun' => $yuntongxun]);
+		config(['ibrand.sms.easy_sms.gateways' => $gateways]);
+
+		$storage = config('ibrand.sms.storage', CacheStorage::class);
+		$storage = new $storage();
+		$easySms = new EasySms(config('ibrand.sms.easy_sms'));
+		$sms     = new SmsClass($easySms, $storage);
+		$code    = $sms->getNewCode('18188888888');
+
+		$config  = [
+			'debug'          => false,
+			'is_sub_account' => false,
+			'account_sid'    => 'mock-account-sid',
+			'account_token'  => 'mock-account-token',
+			'app_id'         => 'mock-app-id',
+		];
+		$gateway = \Mockery::mock(YuntongxunGateway::class . '[request]', [$config])->shouldAllowMockingProtectedMethods();
+		$gateway->shouldReceive('request')->with(
+			'post',
+			\Mockery::on(function ($api) {
+				return 0 === strpos($api, 'https://app.cloopen.com:8883/2013-12-26/Accounts/mock-account-sid/SMS/TemplateSMS?sig=');
+			}),
+			\Mockery::on(function ($params) use ($code) {
+				return $params['json'] == [
+						'to'         => '18188888888',
+						'templateId' => 5589,
+						'appId'      => 'mock-app-id',
+						'datas'      => [$code->code, 'mock-data-2'],
+					] && 'application/json' == $params['headers']['Accept']
+					&& 'application/json;charset=utf-8' == $params['headers']['Content-Type'];
+			})
+		)->andReturn([
+			'statusCode' => YuntongxunGateway::SUCCESS_CODE,
+		], [
+			'statusCode' => 100,
+		])->once();
+
+		$config  = new Config($config);
+		$message = new CustomMessage($code->code);
+
+		$this->assertSame([
+			'statusCode' => YuntongxunGateway::SUCCESS_CODE,
+		], $gateway->send(new PhoneNumber(18188888888), $message, $config));
+
+		$smsMockery = \Mockery::mock(SmsClass::class . '[send]', [$easySms, $storage]);
+		$smsMockery->shouldReceive('send')->with('18188888888', $message, ['yuntongxun'])->andReturn(
+			true
+		)->once();
+
+		$result  = $smsMockery->send('18188888888', $message, ['yuntongxun']);
 		$this->assertTrue($result);
 	}
 }

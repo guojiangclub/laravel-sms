@@ -10,8 +10,6 @@ Laravel 贴合实际需求同时满足多种通道的短信发送组件
 [![Latest Unstable Version](https://poser.pugx.org/ibrand/laravel-sms/v/unstable)](https://packagist.org/packages/ibrand/laravel-sms)
 [![License](https://poser.pugx.org/ibrand/laravel-sms/license)](https://packagist.org/packages/ibrand/laravel-sms)
 
-[TOC]
-
 ## Featrue
 
 基于业务需求在 [overtrue/easy-sms][1] 基础进行扩展开发，主要实现如下目标：
@@ -31,20 +29,20 @@ Laravel 贴合实际需求同时满足多种通道的短信发送组件
 
 ## 安装
 
-```
+```php
 composer require ibrand/laravel-sms:~1.0 -vvv
 ```
 
 低于 Laravel5.5 版本
 
 `config/app.php` 文件中 'providers' 添加
-```
+```php
 iBrand\Sms\ServiceProvider::class
 ```
 
 `config/app.php` 文件中 'aliases' 添加
 
-```
+```php
 'Sms'=> iBrand\Sms\Facade::class
 ```
 
@@ -52,7 +50,8 @@ iBrand\Sms\ServiceProvider::class
 
 ### 发送验证码
 
-实现了发送短信验证码路由，支持 web 和 api ，可以自定义路由的 prefix。
+1. 实现了发送短信验证码路由，支持 web 和 api ，可以自定义路由的 prefix。
+
 ```
 'route' => [
         'prefix' => 'sms',
@@ -75,14 +74,14 @@ POST请求 `http://your.domain/sms/verify-code`
 
 返回参数：
 
-```
+```json
 {
     "status": true,
     "message": "短信发送成功"
 }
 ```
 
-如果需要自定义路由，也可以通过使用Facade发送验证码：
+2. 如果需要自定义路由，也可以通过使用Facade发送验证码：
 
 ```php
 use iBrand\Sms\Facade as Sms;
@@ -119,28 +118,78 @@ Sms::send((request('mobile'), [
     'data' => [
         'code' => 83115
     ],
-], ['aliyun']); // 这里的网关配置将会覆盖全局默认值
+], ['aliyun']); // 这里的网关配置将会覆盖全局默认
 ```
 
+### 定义短信
 
+已**容联云通讯**为例：你可以根据发送场景的不同，定义不同的短信类，通过继承 `Overtrue\EasySms\Message` 来定义短信模型：
+
+```php
+<?php
+    
+use Overtrue\EasySms\Message;
+use Overtrue\EasySms\Contracts\GatewayInterface;
+
+class CustomMessage extends Message
+{
+    protected $code;
+    protected $gateways = ['yuntongxun']; //在sms.php配置文件中添加gateways选项: yuntongxun
+    //...
+
+    public function __construct($code)
+    {
+        $this->code = $code;
+    }
+
+    // 定义直接使用内容发送平台的内容
+    public function getContent(GatewayInterface $gateway = null)
+    {
+    	
+    }
+
+    // 定义使用模板发送方式平台所需要的模板 ID
+    public function getTemplate(GatewayInterface $gateway = null)
+    {
+        return 'templateId';
+    }
+
+    // 模板参数
+    public function getData(GatewayInterface $gateway = null)
+    {
+        return [
+            $this->code,
+            //...
+        ];    
+    }
+}
+```
+
+使用，具体请参考`iBrand\Sms\Test\CustomMessage`：
+
+```php
+use iBrand\Sms\Facade as Sms;
+$code = Sms::getNewCode(request('mobile'));
+$message = new CustomMessage($code->code);
+
+Sms::send(request('mobile'), $message, ['yuntongxun']);
+```
 
 ### 验证验证码
 
-```
-    use iBrand\Sms\Facade as Sms;
-    
+```php
+use iBrand\Sms\Facade as Sms;
 
-    if (!Sms::checkCode(\request('mobile'), \request('code'))) {
-            //Add you code.
-        }
-
+if (!Sms::checkCode(\request('mobile'), \request('code'))) {
+    //Add you code.
+}
 ```
 
 ### 配置模板 ID
 
 在 `config/ibrand/sms.php` 的 `gateways` 参数可以直接添加 `code_template_id` 来配置模板 id
 
-```
+```php
     // 可用的网关配置
         'gateways' => [
 
