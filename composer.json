@@ -1,47 +1,46 @@
 {
-  "name": "ibrand/laravel-sms",
-  "type": "library",
-  "description": "ibrand laravel sms base overtrue's easy-sms",
-  "keywords": [
-    "ibrand",
-    "laravel sms"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "shjchen",
-      "email": "ibrand.shjchen@foxmail.com"
-    }
-  ],
-  "require": {
-    "php": ">=7.0",
-    "overtrue/easy-sms": "~1.0"
-  },
-  "require-dev": {
-    "mockery/mockery": "~0.9",
-    "phpunit/phpunit": "~6.0",
-    "orchestra/testbench": "~3.5"
-  },
-  "autoload": {
-    "psr-4": {
-      "iBrand\\Sms\\": "src/"
-    }
-  },
-
-  "autoload-dev": {
-    "psr-4": {
-      "iBrand\\Sms\\Test\\": "tests/"
-    }
-  },
-
-  "extra": {
-    "laravel": {
-      "providers": [
-        "iBrand\\Sms\\ServiceProvider"
-      ],
-      "aliases": {
-        "Sms": "iBrand\\Sms\\Facade"
-      }
-    }
-  }
+	"name": "ibrand/laravel-sms",
+	"type": "library",
+	"description": "ibrand laravel sms base overtrue's easy-sms",
+	"keywords": [
+		"ibrand",
+		"laravel sms"
+	],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "shjchen",
+			"email": "ibrand.shjchen@foxmail.com"
+		}
+	],
+	"require": {
+		"php": ">=7.0",
+		"overtrue/easy-sms": "~1.0",
+		"doctrine/dbal": "^2.5"
+	},
+	"require-dev": {
+		"mockery/mockery": "~0.9",
+		"phpunit/phpunit": "~6.0",
+		"orchestra/testbench": "~3.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"iBrand\\Sms\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"iBrand\\Sms\\Test\\": "tests/"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [
+				"iBrand\\Sms\\ServiceProvider"
+			],
+			"aliases": {
+				"Sms": "iBrand\\Sms\\Facade"
+			}
+		}
+	}
 }
