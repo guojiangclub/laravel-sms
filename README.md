@@ -187,7 +187,7 @@ if (!Sms::checkCode(\request('mobile'), \request('code'))) {
 
 ### 配置模板 ID
 
-在 `config/ibrand/sms.php` 的 `gateways` 参数可以直接添加 `code_template_id` 来配置模板 id
+在 `vendor/ibrand/laravel-sms/config/config.php` 的 `gateways` 参数可以直接添加 `code_template_id` 来配置模板 id
 
 ```php
     // 可用的网关配置
@@ -216,7 +216,7 @@ if (!Sms::checkCode(\request('mobile'), \request('code'))) {
 
 ### 配置 Content
 
-非模板类通道，可以通过 config/ibrand/sms.php 自定义短信内容
+非模板类通道，可以通过 vendor/ibrand/laravel-sms/config/config.php 自定义短信内容
 
 `'content' => '【your signature】亲爱的用户，您的验证码是%s。有效期为%s分钟，请尽快验证。'`
 
@@ -224,13 +224,13 @@ if (!Sms::checkCode(\request('mobile'), \request('code'))) {
 
 在实际开发中会存在并不用真实发出验证码的情况，因此在 debug 模式下，可以通过
 
-`http://your.domain/api/sms/info?mobile=1898888XXXX` 来直接只看某个手机号当前有效验证码信息。
+`http://your.domain/sms/info?mobile=1898888XXXX` 来直接只看某个手机号当前有效验证码信息。
 
 ### database log
 
 目前已经支持把发送记录保存到数据库，执行 `php artisan migrate` 生成  `laravel_sms_log` 表。
 
-同时在 `config/ibrand/sms.php` 把 `dblog` 设置为 `true`
+同时在 `vendor/ibrand/laravel-sms/config/config.php` 把 `dblog` 设置为 `true`
 
 ```
 'dblog' => true,
