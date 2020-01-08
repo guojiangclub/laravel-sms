@@ -25,8 +25,8 @@
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
-        <env name="ENABLE_RATE_LIMIT" value="true"/>
-        <env name="RATE_LIMIT_COUNT" value="3"/>
-        <env name="RATE_LIMIT_TIME" value="3600"/>
+        <env name="SMS_ENABLE_RATE_LIMIT" value="true"/>
+        <env name="SMS_RATE_LIMIT_COUNT" value="3"/>
+        <env name="SMS_RATE_LIMIT_TIME" value="3600"/>
     </php>
 </phpunit>
