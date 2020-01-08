@@ -6,9 +6,9 @@ Laravel 贴合实际需求同时满足多种通道的短信发送组件
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/badges/build.png?b=master)](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/build-status/master)
-[![Latest Stable Version](https://poser.pugx.org/guojiangclub/laravel-sms/v/stable)](https://packagist.org/packages/ibrand/laravel-sms)
-[![Latest Unstable Version](https://poser.pugx.org/guojiangclub/laravel-sms/v/unstable)](https://packagist.org/packages/ibrand/laravel-sms)
-[![License](https://poser.pugx.org/guojiangclub/laravel-sms/license)](https://packagist.org/packages/ibrand/laravel-sms)
+[![Latest Stable Version](https://poser.pugx.org/ibrand/laravel-sms/v/stable)](https://packagist.org/packages/ibrand/laravel-sms)
+[![Latest Unstable Version](https://poser.pugx.org/ibrand/laravel-sms/v/unstable)](https://packagist.org/packages/ibrand/laravel-sms)
+[![License](https://poser.pugx.org/ibrand/laravel-sms/license)](https://packagist.org/packages/ibrand/laravel-sms)
 
 ## Featrue
 
