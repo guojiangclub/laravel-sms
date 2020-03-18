@@ -14,6 +14,7 @@ class CreateLaravelSmsLogTable extends Migration
     public function up()
     {
         if (!Schema::hasTable('laravel_sms_log')) {
+
             Schema::create('laravel_sms_log', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('mobile');
