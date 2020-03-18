@@ -2,10 +2,10 @@
 
 Laravel 贴合实际需求同时满足多种通道的短信发送组件
 
-[![Build Status](https://travis-ci.org/ibrandcc/laravel-sms.svg?branch=master)](https://travis-ci.org/ibrandcc/laravel-sms)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ibrandcc/laravel-sms/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ibrandcc/laravel-sms/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/ibrandcc/laravel-sms/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ibrandcc/laravel-sms/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/ibrandcc/laravel-sms/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ibrandcc/laravel-sms/build-status/master)
+[![Build Status](https://travis-ci.org/guojiangclub/laravel-sms.svg?branch=master)](https://travis-ci.org/guojiangclub/laravel-sms)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/badges/build.png?b=master)](https://scrutinizer-ci.com/g/guojiangclub/laravel-sms/build-status/master)
 [![Latest Stable Version](https://poser.pugx.org/ibrand/laravel-sms/v/stable)](https://packagist.org/packages/ibrand/laravel-sms)
 [![Latest Unstable Version](https://poser.pugx.org/ibrand/laravel-sms/v/unstable)](https://packagist.org/packages/ibrand/laravel-sms)
 [![License](https://poser.pugx.org/ibrand/laravel-sms/license)](https://packagist.org/packages/ibrand/laravel-sms)
@@ -22,6 +22,7 @@ Laravel 贴合实际需求同时满足多种通道的短信发送组件
 6. 集成短信发送路由，支持 web 和 api 发送方式。
 7. 支持验证码调试，debug 模式下可直接查询手机号目前有效的验证码
 8. 支持短信验证码发送记录保存到数据库
+9. 短信发送频率限制，同一 IP 限定时间内请求次数
 
 ## TODO：
 
