@@ -136,7 +136,7 @@ class Sms
 	 */
 	public function verifyMobile($to)
 	{
-		return preg_match('/^(?=\d{11}$)^1(?:3\d|4[57]|5[^4\D]|66|7[^249\D]|8\d|9[89])\d{8}$/', $to);
+		return preg_match('/^(?=\d{11}$)^1(?:3\d|4[57]|5[^4\D]|6[56]|7[^249\D]|8\d|9[189])\d{8}$/', $to);
 	}
 
 	/**
