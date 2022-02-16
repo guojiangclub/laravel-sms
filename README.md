@@ -244,3 +244,29 @@ if (!Sms::checkCode(\request('mobile'), \request('code'))) {
 
   [1]: https://github.com/overtrue/easy-sms/
   [2]: https://github.com/toplan/laravel-sms/
+
+## 果酱云社区
+
+<p align="center">
+  <a href="https://guojiang.club/" target="_blank">
+    <img src="https://cdn.guojiang.club/image/2022/02/16/wu_1fs0jbco2182g280l1vagm7be6.png" alt="点击跳转"/>
+  </a>
+</p>
+
+
+
+- 全网真正免费的IT课程平台
+
+- 专注于综合IT技术的在线课程，致力于打造优质、高效的IT在线教育平台
+
+- 课程方向包含Python、Java、前端、大数据、数据分析、人工智能等热门IT课程
+
+- 300+免费课程任你选择
+
+
+
+<p align="center">
+  <a href="https://guojiang.club/" target="_blank">
+    <img src="https://cdn.guojiang.club/image/2022/02/16/wu_1fs0l82ae1pq11e431j6n17js1vq76.png" alt="点击跳转"/>
+  </a>
+</p>
