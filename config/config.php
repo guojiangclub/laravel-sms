@@ -74,5 +74,5 @@ return [
 
 	'rate_limit_count' => env('SMS_RATE_LIMIT_COUNT', 10), //次数
 
-	'rate_limit_time' => env('SMS_RATE_LIMIT_TIME', 60), //分钟
+	'rate_limit_time' => env('SMS_RATE_LIMIT_TIME', 60), //秒
 ];
