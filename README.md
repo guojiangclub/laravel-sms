@@ -33,6 +33,10 @@ Laravel 贴合实际需求同时满足多种通道的短信发送组件
 ```php
 composer require ibrand/laravel-sms:~1.0 -vvv
 ```
+## 发布
+```shell
+php artisan vendor:publish --provider='iBrand\Sms\ServiceProvider'
+```
 
 低于 Laravel5.5 版本
 
